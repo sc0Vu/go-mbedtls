@@ -29,3 +29,4 @@
 
 int X_mbedtls_sha1_ret(unsigned char *src, int len, unsigned char *out);
 int X_mbedtls_sha256_ret(unsigned char *src, int len, unsigned char *out);
+int X_mbedtls_sha512_ret(unsigned char *src, int len, unsigned char *out);

@@ -50,3 +50,27 @@ exit:
     return ret;
 #endif
 }
+
+int X_mbedtls_sha512_ret (unsigned char *src, int len, unsigned char *out) {
+    int ret = 0;
+#ifdef MBEDTLS_MD_C
+    const mbedtls_md_info_t *md_info;
+    md_info = mbedtls_md_info_from_string("SHA512");
+    if (md_info == NULL) {
+        ret = ERR_FUNCTION_NOT_SUPPORTED;
+        goto exit;
+    }
+    if ((ret = mbedtls_md(md_info, src, len, out)) != 0) {
+        goto exit;
+    }
+exit:
+    return ret;
+#elif defined(MBEDTLS_SHA512_C)
+    int is384 = 1;
+    ret = mbedtls_sha512_ret(src, len, out, is384);
+    return ret;
+#else
+    ret = ERR_FUNCTION_NOT_SUPPORTED;
+    return ret;
+#endif
+}
