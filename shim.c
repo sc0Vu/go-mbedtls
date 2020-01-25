@@ -57,3 +57,16 @@ int X_mbedtls_md5_ret(unsigned char *src, int len, unsigned char *out) {
     return ret;
 #endif
 }
+
+int X_mbedtls_ripemd160_ret(unsigned char *src, int len, unsigned char *out) {
+    int ret = 0;
+#ifdef MBEDTLS_MD_C
+    MD_HASH("RIPEMD160", src, len, out);
+#elif defined(MBEDTLS_RIPEMD160_C)
+    ret = mbedtls_ripemd160_ret(src, len, out);
+    return ret;
+#else
+    ret = ERR_FUNCTION_NOT_SUPPORTED;
+    return ret;
+#endif
+}
