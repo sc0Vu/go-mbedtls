@@ -11,10 +11,15 @@
 #if defined(MBEDTLS_MD_C)
 #include "mbedtls/md.h"
 #include "mbedtls/md_internal.h"
-#endif
+#else
 
 #if defined(MBEDTLS_SHA1_C)
 #include "mbedtls/sha1.h"
+#endif
+
+#if defined(MBEDTLS_SHA256_C)
+#include "mbedtls/sha256.h"
+#endif
 #endif
 
 #include "stdio.h"
@@ -23,3 +28,4 @@
 #define ERR_FUNCTION_NOT_SUPPORTED -0x1111
 
 int X_mbedtls_sha1_ret(unsigned char *src, int len, unsigned char *out);
+int X_mbedtls_sha256_ret(unsigned char *src, int len, unsigned char *out);

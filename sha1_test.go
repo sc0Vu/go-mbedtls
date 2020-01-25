@@ -1,6 +1,7 @@
 package mbedtls
 
 import (
+	"bytes"
 	"crypto/sha1"
 	"testing"
 )
@@ -31,10 +32,8 @@ func TestSha1(t *testing.T) {
 		if len(cout) != len(mout) {
 			t.Fatalf("sha1 hash result didn't match")
 		}
-		for ind, byt := range cout {
-			if byt != mout[ind] {
-				t.Fatalf("sha1 hash result didn't match")
-			}
+		if !bytes.Equal(cout[:], mout[:]) {
+			t.Fatalf("sha1 hash result didn't match")
 		}
 	}
 }
