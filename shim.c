@@ -74,3 +74,26 @@ exit:
     return ret;
 #endif
 }
+
+int X_mbedtls_md5_ret (unsigned char *src, int len, unsigned char *out) {
+    int ret = 0;
+#ifdef MBEDTLS_MD_C
+    const mbedtls_md_info_t *md_info;
+    md_info = mbedtls_md_info_from_string("MD5");
+    if (md_info == NULL) {
+        ret = ERR_FUNCTION_NOT_SUPPORTED;
+        goto exit;
+    }
+    if ((ret = mbedtls_md(md_info, src, len, out)) != 0) {
+        goto exit;
+    }
+exit:
+    return ret;
+#elif defined(MBEDTLS_MD5_C)
+    ret = mbedtls_md5_ret(src, len, out);
+    return ret;
+#else
+    ret = ERR_FUNCTION_NOT_SUPPORTED;
+    return ret;
+#endif
+}

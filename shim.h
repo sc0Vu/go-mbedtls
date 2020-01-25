@@ -20,6 +20,10 @@
 #if defined(MBEDTLS_SHA256_C)
 #include "mbedtls/sha256.h"
 #endif
+
+#if defined(MBEDTLS_MD5_C)
+#include "mbedtls/md5.h"
+#endif
 #endif
 
 #include "stdio.h"
@@ -30,3 +34,4 @@
 int X_mbedtls_sha1_ret(unsigned char *src, int len, unsigned char *out);
 int X_mbedtls_sha256_ret(unsigned char *src, int len, unsigned char *out);
 int X_mbedtls_sha512_ret(unsigned char *src, int len, unsigned char *out);
+int X_mbedtls_md5_ret (unsigned char *src, int len, unsigned char *out);
