@@ -4,7 +4,6 @@ package mbedtls
 import "C"
 
 import (
-	"fmt"
 	"unsafe"
 )
 
@@ -20,7 +19,7 @@ func Sha1(src []byte) (out [20]byte, err error) {
 	}
 	ret := C.X_mbedtls_sha1_ret((*C.uchar)(unsafe.Pointer(&src[0])), C.int(len(src)), (*C.uchar)(unsafe.Pointer(&out[0])))
 	if ret != 0 {
-		err = fmt.Errorf("couldn't do sha1 hash, ret=%d", ret)
+		err = GetMessageDigestErrorByErrorCode((int)(ret))
 		return
 	}
 	return

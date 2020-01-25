@@ -20,6 +20,6 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-#define ERROR_FUNCTION_NOT_SUPPORT -1
+#define ERR_FUNCTION_NOT_SUPPORTED -0x1111
 
 int X_mbedtls_sha1_ret(unsigned char *src, int len, unsigned char *out);
