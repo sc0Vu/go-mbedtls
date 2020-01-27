@@ -12,9 +12,21 @@
 #include "mbedtls/md.h"
 #include "mbedtls/md_internal.h"
 
-#define MD_HASH(HASH_NAME, SRC, LEN, OUT) \
+#define MD_HASH_FROM_HASH_NAME(HASH_NAME, SRC, LEN, OUT) \
     const mbedtls_md_info_t *md_info; \
     md_info = mbedtls_md_info_from_string(HASH_NAME); \
+    if (md_info == NULL) { \
+        ret = ERR_FUNCTION_NOT_SUPPORTED; \
+        return ret; \
+    } \
+    if ((ret = mbedtls_md(md_info, SRC, LEN, OUT)) != 0) { \
+        return ret; \
+    } \
+    return ret;
+
+#define MD_HASH_FROM_HASH_TYPE(HASH_TYPE, SRC, LEN, OUT) \
+    const mbedtls_md_info_t *md_info; \
+    md_info = mbedtls_md_info_from_type(HASH_TYPE); \
     if (md_info == NULL) { \
         ret = ERR_FUNCTION_NOT_SUPPORTED; \
         return ret; \
