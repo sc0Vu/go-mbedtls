@@ -23,13 +23,14 @@ const (
 )
 
 var (
-	ErrUnknownErrorCode     = fmt.Errorf("unknown error code")
-	ErrFunctionNotSupported = fmt.Errorf("couldn't find the functino in mbedtls library")
-	ErrMDFeatureUnavailable = fmt.Errorf("the selected feature is not available")
-	ErrMDBadInputData       = fmt.Errorf("bad input parameters to function")
-	ErrMDAllocFailed        = fmt.Errorf("failed to allocate memory")
-	ErrMDFileIOError        = fmt.Errorf("opening or reading of file failed")
-	ErrMDHWAccelFailed      = fmt.Errorf("MD hardware accelerator failed")
+	ErrUnknownErrorCode          = fmt.Errorf("unknown error code")
+	ErrFunctionNotSupported      = fmt.Errorf("couldn't find the functino in mbedtls library")
+	ErrMDFeatureUnavailable      = fmt.Errorf("the selected feature is not available")
+	ErrMDBadInputData            = fmt.Errorf("bad input parameters to function")
+	ErrMDAllocFailed             = fmt.Errorf("failed to allocate memory")
+	ErrMDFileIOError             = fmt.Errorf("opening or reading of file failed")
+	ErrMDHWAccelFailed           = fmt.Errorf("MD hardware accelerator failed")
+	ErrHashAlgorithmNotSupported = fmt.Errorf("hash algorithm not supported")
 )
 
 // MessageDigestError returns error for the given error code

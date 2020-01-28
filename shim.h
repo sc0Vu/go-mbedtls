@@ -65,3 +65,5 @@ int X_mbedtls_sha256_ret(unsigned char *src, int len, unsigned char *out);
 int X_mbedtls_sha512_ret(unsigned char *src, int len, unsigned char *out);
 int X_mbedtls_md5_ret(unsigned char *src, int len, unsigned char *out);
 int X_mbedtls_ripemd160_ret(unsigned char *src, int len, unsigned char *out);
+mbedtls_md_context_t *X_mbedtls_md_ctx_from_type(const unsigned char *key, size_t keylen, mbedtls_md_type_t md_type);
+void X_mbedtls_md_free(mbedtls_md_context_t *ctx);

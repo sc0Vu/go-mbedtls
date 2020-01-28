@@ -70,3 +70,41 @@ int X_mbedtls_ripemd160_ret(unsigned char *src, int len, unsigned char *out) {
     return ret;
 #endif
 }
+
+mbedtls_md_context_t *X_mbedtls_md_ctx_from_type(const unsigned char *key, size_t keylen, mbedtls_md_type_t md_type)
+{
+    int ret = 0;
+#ifdef MBEDTLS_MD_C
+    mbedtls_md_context_t *ctx;
+    const mbedtls_md_info_t *md_info;
+    md_info = mbedtls_md_info_from_type(md_type);
+    if (md_info == NULL) {
+        return NULL;
+    }
+    ctx = malloc(sizeof(mbedtls_md_context_t));
+    if (ctx == NULL) {
+        return NULL;
+    }
+    mbedtls_md_init(ctx);
+    if ((ret = mbedtls_md_setup(ctx, md_info, 1)) != 0) {
+        free(ctx);
+        mbedtls_md_free(ctx);
+        return NULL;
+    }
+    if ((ret = mbedtls_md_hmac_starts(ctx, key, keylen)) != 0) {
+        free(ctx);
+        mbedtls_md_free(ctx);
+        return NULL;
+    }
+    return ctx;
+#else
+    return NULL;
+#endif
+}
+
+void X_mbedtls_md_free(mbedtls_md_context_t *ctx) {
+#ifdef MBEDTLS_MD_C
+    // free(ctx);
+    mbedtls_md_free(ctx);
+#endif
+}
