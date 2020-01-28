@@ -71,7 +71,7 @@ int X_mbedtls_ripemd160_ret(unsigned char *src, int len, unsigned char *out) {
 #endif
 }
 
-mbedtls_md_context_t *X_mbedtls_md_ctx_from_type(const unsigned char *key, size_t keylen, mbedtls_md_type_t md_type)
+mbedtls_md_context_t *X_mbedtls_md_ctx_from_type(mbedtls_md_type_t md_type)
 {
     int ret = 0;
 #ifdef MBEDTLS_MD_C
@@ -87,12 +87,8 @@ mbedtls_md_context_t *X_mbedtls_md_ctx_from_type(const unsigned char *key, size_
     }
     mbedtls_md_init(ctx);
     if ((ret = mbedtls_md_setup(ctx, md_info, 1)) != 0) {
-        free(ctx);
-        mbedtls_md_free(ctx);
-        return NULL;
-    }
-    if ((ret = mbedtls_md_hmac_starts(ctx, key, keylen)) != 0) {
-        free(ctx);
+        // do we need to call free?
+        // free(ctx);
         mbedtls_md_free(ctx);
         return NULL;
     }
@@ -104,6 +100,7 @@ mbedtls_md_context_t *X_mbedtls_md_ctx_from_type(const unsigned char *key, size_
 
 void X_mbedtls_md_free(mbedtls_md_context_t *ctx) {
 #ifdef MBEDTLS_MD_C
+    // do we need to call free?
     // free(ctx);
     mbedtls_md_free(ctx);
 #endif

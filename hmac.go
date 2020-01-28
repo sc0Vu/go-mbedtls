@@ -17,6 +17,7 @@ const (
 )
 
 type MessageDigest struct {
+	mdInfo   *C.mbedtls_md_info_t
 	mdType   C.mbedtls_md_type_t
 	mdLength int
 }
@@ -26,7 +27,7 @@ type HMAC struct {
 	md  *MessageDigest
 }
 
-func getMessageDigestType(digest int) (md *MessageDigest) {
+func getMessageDigestByType(digest int) (md *MessageDigest) {
 	switch digest {
 	case MESSAGE_DIGEST_MD5:
 		md = &MessageDigest{
@@ -61,18 +62,25 @@ func getMessageDigestType(digest int) (md *MessageDigest) {
 	default:
 		break
 	}
+	if md != nil {
+		md.mdInfo = C.mbedtls_md_info_from_type(md.mdType)
+	}
 	return
 }
 
 func NewHMAC(privateKey []byte, messageDigestType int) (hmac *HMAC, err error) {
-	md := getMessageDigestType(messageDigestType)
+	md := getMessageDigestByType(messageDigestType)
 	if md == nil {
 		err = ErrHashAlgorithmNotSupported
 		return
 	}
-	ctx := C.X_mbedtls_md_ctx_from_type((*C.uchar)(unsafe.Pointer(&privateKey[0])), C.size_t(len(privateKey)), md.mdType)
+	ctx := C.X_mbedtls_md_ctx_from_type(md.mdType)
 	if ctx == nil {
 		err = ErrHashAlgorithmNotSupported
+		return
+	}
+	if ret := C.mbedtls_md_hmac_starts(ctx, (*C.uchar)(unsafe.Pointer(&privateKey[0])), C.size_t(len(privateKey))); ret != 0 {
+		err = GetMessageDigestErrorByErrorCode(int(ret))
 		return
 	}
 	hmac = &HMAC{
