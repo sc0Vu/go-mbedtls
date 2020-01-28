@@ -22,7 +22,7 @@ var sha512Tests = []sha512Test{
 	},
 }
 
-func TestSha512(t *testing.T) {
+func TestSHA512(t *testing.T) {
 	for _, test := range sha512Tests {
 		cout := sha512.Sum512(test.src)
 		mout, err := Sha512(test.src)
@@ -38,8 +38,9 @@ func TestSha512(t *testing.T) {
 	}
 }
 
-func BenchmarkSha512(b *testing.B) {
+func BenchmarkSHA512(b *testing.B) {
 	src := []byte("helloworld")
+	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		Sha512(src)
 	}

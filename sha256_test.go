@@ -22,7 +22,7 @@ var sha256Tests = []sha256Test{
 	},
 }
 
-func TestSha256(t *testing.T) {
+func TestSHA256(t *testing.T) {
 	for _, test := range sha256Tests {
 		cout := sha256.Sum256(test.src)
 		mout, err := Sha256(test.src)
@@ -38,8 +38,9 @@ func TestSha256(t *testing.T) {
 	}
 }
 
-func BenchmarkSha256(b *testing.B) {
+func BenchmarkSHA256(b *testing.B) {
 	src := []byte("helloworld")
+	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		Sha256(src)
 	}

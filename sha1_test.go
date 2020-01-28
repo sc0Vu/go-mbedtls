@@ -22,7 +22,7 @@ var sha1Tests = []sha1Test{
 	},
 }
 
-func TestSha1(t *testing.T) {
+func TestSHA1(t *testing.T) {
 	for _, test := range sha1Tests {
 		cout := sha1.Sum(test.src)
 		mout, err := Sha1(test.src)
@@ -38,8 +38,9 @@ func TestSha1(t *testing.T) {
 	}
 }
 
-func BenchmarkSha1(b *testing.B) {
+func BenchmarkSHA1(b *testing.B) {
 	src := []byte("helloworld")
+	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		Sha1(src)
 	}

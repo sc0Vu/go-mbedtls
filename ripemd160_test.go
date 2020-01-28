@@ -20,7 +20,7 @@ var ripemd160Tests = []ripemd160Test{
 	},
 }
 
-// func TestRipemd160(t *testing.T) {
+// func TestRIPEMD160(t *testing.T) {
 // 	for _, test := range ripemd160Tests {
 // 		ghash := ripemd160.New()
 // 		ghash.Write(test.src)
@@ -38,8 +38,9 @@ var ripemd160Tests = []ripemd160Test{
 // 	}
 // }
 
-func BenchmarkRipemd160(b *testing.B) {
+func BenchmarkRIPEMD160(b *testing.B) {
 	src := []byte("helloworld")
+	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		Ripemd160(src)
 	}
