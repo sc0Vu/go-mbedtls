@@ -8,68 +8,13 @@ import (
 	"unsafe"
 )
 
-const (
-	MESSAGE_DIGEST_MD5 = iota
-	MESSAGE_DIGEST_SHA1
-	MESSAGE_DIGEST_SHA256
-	MESSAGE_DIGEST_SHA512
-	MESSAGE_DIGEST_RIPEMD160
-)
-
-type MessageDigest struct {
-	mdInfo   *C.mbedtls_md_info_t
-	mdType   C.mbedtls_md_type_t
-	mdLength int
-}
-
 type HMAC struct {
 	ctx *C.mbedtls_md_context_t
 	md  *MessageDigest
 }
 
-func getMessageDigestByType(digest int) (md *MessageDigest) {
-	switch digest {
-	case MESSAGE_DIGEST_MD5:
-		md = &MessageDigest{
-			mdType:   C.MBEDTLS_MD_MD5,
-			mdLength: 16,
-		}
-		break
-	case MESSAGE_DIGEST_SHA1:
-		md = &MessageDigest{
-			mdType:   C.MBEDTLS_MD_SHA1,
-			mdLength: 20,
-		}
-		break
-	case MESSAGE_DIGEST_SHA256:
-		md = &MessageDigest{
-			mdType:   C.MBEDTLS_MD_SHA256,
-			mdLength: 32,
-		}
-		break
-	case MESSAGE_DIGEST_SHA512:
-		md = &MessageDigest{
-			mdType:   C.MBEDTLS_MD_SHA512,
-			mdLength: 64,
-		}
-		break
-	case MESSAGE_DIGEST_RIPEMD160:
-		md = &MessageDigest{
-			mdType:   C.MBEDTLS_MD_RIPEMD160,
-			mdLength: 20,
-		}
-		break
-	default:
-		break
-	}
-	if md != nil {
-		md.mdInfo = C.mbedtls_md_info_from_type(md.mdType)
-	}
-	return
-}
-
 func NewHMAC(privateKey []byte, messageDigestType int) (hmac *HMAC, err error) {
-	md := getMessageDigestByType(messageDigestType)
+	md := NewMessageDigestByType(messageDigestType)
 	if md == nil {
 		err = ErrHashAlgorithmNotSupported
 		return
