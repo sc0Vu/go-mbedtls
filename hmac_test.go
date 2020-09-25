@@ -31,7 +31,7 @@ var hmacTests = []hmacTest{
 var key = []byte("1234567891aabbccddee")
 
 func TestMD5HMAC(t *testing.T) {
-	mhmac, err := NewHMAC(key, MESSAGE_DIGEST_MD5)
+	mhmac, err := NewHMAC(MESSAGE_DIGEST_MD5, key)
 	if err != nil {
 		t.Fatalf("Unable to create new HMAC: %s", err)
 	}
@@ -56,7 +56,7 @@ func TestMD5HMAC(t *testing.T) {
 }
 
 func TestSHA1HMAC(t *testing.T) {
-	mhmac, err := NewHMAC(key, MESSAGE_DIGEST_SHA1)
+	mhmac, err := NewHMAC(MESSAGE_DIGEST_SHA1, key)
 	if err != nil {
 		t.Fatalf("Unable to create new HMAC: %s", err)
 	}
@@ -81,7 +81,7 @@ func TestSHA1HMAC(t *testing.T) {
 }
 
 func TestSHA256HMAC(t *testing.T) {
-	mhmac, err := NewHMAC(key, MESSAGE_DIGEST_SHA256)
+	mhmac, err := NewHMAC(MESSAGE_DIGEST_SHA256, key)
 	if err != nil {
 		t.Fatalf("Unable to create new HMAC: %s", err)
 	}
@@ -106,7 +106,7 @@ func TestSHA256HMAC(t *testing.T) {
 }
 
 func TestSHA512HMAC(t *testing.T) {
-	mhmac, err := NewHMAC(key, MESSAGE_DIGEST_SHA512)
+	mhmac, err := NewHMAC(MESSAGE_DIGEST_SHA512, key)
 	if err != nil {
 		t.Fatalf("Unable to create new HMAC: %s", err)
 	}
@@ -131,7 +131,7 @@ func TestSHA512HMAC(t *testing.T) {
 }
 
 func TestRIPEMD160HMAC(t *testing.T) {
-	mhmac, err := NewHMAC(key, MESSAGE_DIGEST_RIPEMD160)
+	mhmac, err := NewHMAC(MESSAGE_DIGEST_RIPEMD160, key)
 	if err != nil {
 		t.Fatalf("Unable to create new HMAC: %s", err)
 	}
@@ -155,9 +155,20 @@ func TestRIPEMD160HMAC(t *testing.T) {
 	}
 }
 
-func BenchmarkSHA256HMAC(b *testing.B) {
+func fakeData(size int) (data []byte) {
+	// if size > math.MaxUint32 {
+	// 	size = math.MaxUint32
+	// }
+	data = make([]byte, size)
+	for i := 0; i < size; i++ {
+		data[i] = byte(i)
+	}
+	return
+}
+
+func BenchmarkMbedtlsSHA256HMAC(b *testing.B) {
 	src := []byte("helloworld")
-	mhmac, err := NewHMAC(key, MESSAGE_DIGEST_SHA256)
+	mhmac, err := NewHMAC(MESSAGE_DIGEST_SHA256, key)
 	if err != nil {
 		b.Fatalf("unable to create new HMAC: %s", err)
 	}
@@ -171,5 +182,52 @@ func BenchmarkSHA256HMAC(b *testing.B) {
 			b.Fatalf("error while finalizing HMAC: %s", err)
 		}
 		mhmac.Reset()
+	}
+}
+
+func BenchmarkCryptoSHA256HMAC(b *testing.B) {
+	src := []byte("helloworld")
+	ghmac := hmac.New(sha256.New, key)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		var err error
+		if _, err = ghmac.Write(src); err != nil {
+			b.Fatalf("unable to write data into HMAC: %s", err)
+		}
+		ghmac.Sum(nil)
+		ghmac.Reset()
+	}
+}
+
+func Benchmark1MBMbedtlsSHA256HMAC(b *testing.B) {
+	src := fakeData(1024 * 1024)
+	mhmac, err := NewHMAC(MESSAGE_DIGEST_SHA256, key)
+	if err != nil {
+		b.Fatalf("unable to create new HMAC: %s", err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		var err error
+		if err = mhmac.Write(src); err != nil {
+			b.Fatalf("unable to write data into HMAC: %s", err)
+		}
+		if _, err = mhmac.Finish(); err != nil {
+			b.Fatalf("error while finalizing HMAC: %s", err)
+		}
+		mhmac.Reset()
+	}
+}
+
+func Benchmark1MBCryptoSHA256HMAC(b *testing.B) {
+	src := fakeData(1024 * 1024)
+	ghmac := hmac.New(sha256.New, key)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		var err error
+		if _, err = ghmac.Write(src); err != nil {
+			b.Fatalf("unable to write data into HMAC: %s", err)
+		}
+		ghmac.Sum(nil)
+		ghmac.Reset()
 	}
 }
