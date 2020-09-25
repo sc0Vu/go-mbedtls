@@ -158,7 +158,7 @@ func TestRIPEMD160MD(t *testing.T) {
 	}
 }
 
-func BenchmarkSHA256MD(b *testing.B) {
+func BenchmarkMbedtlsSHA256MD(b *testing.B) {
 	src := []byte("helloworld")
 	md, err := NewMessageDigestWithContext(MESSAGE_DIGEST_SHA256)
 	if err != nil {
@@ -173,5 +173,51 @@ func BenchmarkSHA256MD(b *testing.B) {
 		if _, err = md.Finish(); err != nil {
 			b.Fatalf("error while finalizing md: %s", err)
 		}
+	}
+}
+
+func BenchmarkCryptoSHA256MD(b *testing.B) {
+	src := []byte("helloworld")
+	gd := sha256.New()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		var err error
+		if _, err = gd.Write(src); err != nil {
+			b.Fatalf("unable to write data into md: %s", err)
+		}
+		_ = gd.Sum(nil)
+		gd.Reset()
+	}
+}
+
+func Benchmark1MBMbedtlsSHA256MD(b *testing.B) {
+	src := fakeData(1024 * 1024)
+	md, err := NewMessageDigestWithContext(MESSAGE_DIGEST_SHA256)
+	if err != nil {
+		b.Fatalf("unable to create new md: %s", err)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		var err error
+		if err = md.Write(src); err != nil {
+			b.Fatalf("unable to write data into md: %s", err)
+		}
+		if _, err = md.Finish(); err != nil {
+			b.Fatalf("error while finalizing md: %s", err)
+		}
+	}
+}
+
+func Benchmark1MBCryptoSHA256MD(b *testing.B) {
+	src := fakeData(1024 * 1024)
+	gd := sha256.New()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		var err error
+		if _, err = gd.Write(src); err != nil {
+			b.Fatalf("unable to write data into md: %s", err)
+		}
+		_ = gd.Sum(nil)
+		gd.Reset()
 	}
 }
