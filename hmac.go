@@ -8,6 +8,7 @@ import (
 	"unsafe"
 )
 
+// HMAC represents HMAC hash
 type HMAC struct {
 	ctx *C.mbedtls_md_context_t
 	md  *MessageDigest
@@ -39,7 +40,7 @@ func NewHMAC(messageDigestType int, privateKey []byte) (hmac *HMAC, err error) {
 	return
 }
 
-// Write feeds data to the ongoing HMAC hash buffer
+// Write feeds data to the ongoing HMAC hash buffer.
 func (hmac *HMAC) Write(src []byte) (err error) {
 	if len(src) == 0 {
 		return
@@ -51,7 +52,7 @@ func (hmac *HMAC) Write(src []byte) (err error) {
 	return
 }
 
-// Finish the HMAC computation
+// Finish the HMAC computation.
 func (hmac *HMAC) Finish() (out []byte, err error) {
 	out = make([]byte, hmac.md.mdLength)
 	if ret := C.mbedtls_md_hmac_finish(hmac.ctx, (*C.uchar)(unsafe.Pointer(&out[0]))); ret != 0 {
@@ -61,7 +62,7 @@ func (hmac *HMAC) Finish() (out []byte, err error) {
 	return
 }
 
-// Reset prepares to authenticate a new message with the same key as the previous HMAC operation
+// Reset prepares to authenticate a new message with the same key as the previous HMAC operation.
 func (hmac *HMAC) Reset() (err error) {
 	if ret := C.mbedtls_md_hmac_reset(hmac.ctx); ret != 0 {
 		err = GetMessageDigestErrorByErrorCode(int(ret))
@@ -70,7 +71,7 @@ func (hmac *HMAC) Reset() (err error) {
 	return
 }
 
-// Close clear the mbedtls HMAC context
+// Close clear the mbedtls HMAC context.
 func (hmac *HMAC) Close() {
 	C.X_mbedtls_md_free(hmac.ctx)
 }

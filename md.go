@@ -16,6 +16,7 @@ const (
 	MESSAGE_DIGEST_RIPEMD160
 )
 
+// MessageDigest represents MD hash
 type MessageDigest struct {
 	ctx      *C.mbedtls_md_context_t
 	mdInfo   *C.mbedtls_md_info_t
@@ -23,6 +24,7 @@ type MessageDigest struct {
 	mdLength int
 }
 
+// NewMessageDigestByType returns a new MD hash using the given message digest type.
 func NewMessageDigestByType(digest int) (md *MessageDigest) {
 	switch digest {
 	case MESSAGE_DIGEST_MD5:
@@ -69,6 +71,7 @@ func NewMessageDigestByType(digest int) (md *MessageDigest) {
 	return
 }
 
+// NewMessageDigestWithContext returns a new MD hash and MD context using the given message digest type.
 func NewMessageDigestWithContext(messageDigestType int) (md *MessageDigest, err error) {
 	md = NewMessageDigestByType(messageDigestType)
 	if md == nil {
@@ -95,35 +98,7 @@ func NewMessageDigestWithContext(messageDigestType int) (md *MessageDigest, err 
 	return
 }
 
-// func NewSha1() (sha1 *SHA1, err error) {
-// 	md := getMessageDigestByType(MESSAGE_DIGEST_SHA1)
-// 	if md == nil {
-// 		err = ErrHashAlgorithmNotSupported
-// 		return
-// 	}
-// 	ctx := C.X_mbedtls_md_ctx_from_type(md.mdType)
-// 	if ctx == nil {
-// 		err = ErrHashAlgorithmNotSupported
-// 		return
-// 	}
-// 	if ret := C.mbedtls_md_setup(ctx, md.mdInfo, 0); ret != 0 {
-// 		err = ErrHashAlgorithmNotSupported
-// 		return
-// 	}
-// 	if ret := C.mbedtls_md_starts(ctx); ret != 0 {
-// 		err = ErrHashAlgorithmNotSupported
-// 		return
-// 	}
-// 	sha1 = &SHA1{
-// 		ctx: ctx,
-// 		md:  md,
-// 	}
-// 	runtime.SetFinalizer(sha1, func(sha1 *SHA1) {
-// 		sha1.Close()
-// 	})
-// 	return
-// }
-
+// Wirte data to MD computation buffer.
 func (md *MessageDigest) Write(src []byte) (err error) {
 	if len(src) == 0 {
 		return
@@ -138,6 +113,7 @@ func (md *MessageDigest) Write(src []byte) (err error) {
 	return
 }
 
+// Finish MD computation.
 func (md *MessageDigest) Finish() (out []byte, err error) {
 	if md.ctx == nil {
 		return
@@ -150,6 +126,16 @@ func (md *MessageDigest) Finish() (out []byte, err error) {
 	return
 }
 
+// TODO: make reset works for md context.
+// func (md *MessageDigest) Reset() (err error) {
+// 	if ret := C.mbedtls_md_hmac_reset(md.ctx); ret != 0 {
+// 		err = GetMessageDigestErrorByErrorCode(int(ret))
+// 		return
+// 	}
+// 	return
+// }
+
+// Close the MD context.
 func (md *MessageDigest) Close() {
 	C.X_mbedtls_md_free(md.ctx)
 }
