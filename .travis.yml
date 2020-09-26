@@ -1,0 +1,14 @@
+language: go
+
+go:
+ - 1.14.x
+
+sudo: required
+
+before_install:
+    - git clone https://github.com/ARMmbed/mbedtls.git
+    - cd mbedtls
+    - make install
+
+script:
+  - make test
