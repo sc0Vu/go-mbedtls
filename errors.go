@@ -33,27 +33,21 @@ var (
 	ErrHashAlgorithmNotSupported = fmt.Errorf("hash algorithm not supported")
 )
 
-// MessageDigestError returns error for the given error code
+// GetMessageDigestErrorByErrorCode returns error for the given error code
 func GetMessageDigestErrorByErrorCode(errCode int) (err error) {
 	switch errCode {
 	case ERR_FUNCTION_NOT_SUPPORTED:
 		err = ErrFunctionNotSupported
-		break
 	case ERR_MD_FEATURE_UNAVAILABLE:
 		err = ErrMDFeatureUnavailable
-		break
 	case ERR_MD_BAD_INPUT_DATA:
 		err = ErrMDBadInputData
-		break
 	case ERR_MD_FILE_IO_ERROR:
 		err = ErrMDFileIOError
-		break
 	case ERR_MD_ALLOC_FAILED:
 		err = ErrMDAllocFailed
-		break
 	default:
 		err = nil
-		break
 	}
 	return err
 }

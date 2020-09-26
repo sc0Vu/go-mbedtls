@@ -55,33 +55,28 @@ func doMDTest(t *testing.T, newMD func() (md *MessageDigest, err error), gmd has
 }
 
 func TestMD5MD(t *testing.T) {
-	var gmd hash.Hash
-	gmd = md5.New()
+	gmd := md5.New()
 
 	doMDTest(t, func() (md *MessageDigest, err error) { return NewMessageDigestWithContext(MESSAGE_DIGEST_MD5) }, gmd)
 }
 
 func TestSHA1MD(t *testing.T) {
-	var gmd hash.Hash
-	gmd = sha1.New()
+	gmd := sha1.New()
 	doMDTest(t, func() (md *MessageDigest, err error) { return NewMessageDigestWithContext(MESSAGE_DIGEST_SHA1) }, gmd)
 }
 
 func TestSHA256MD(t *testing.T) {
-	var gmd hash.Hash
-	gmd = sha256.New()
+	gmd := sha256.New()
 	doMDTest(t, func() (md *MessageDigest, err error) { return NewMessageDigestWithContext(MESSAGE_DIGEST_SHA256) }, gmd)
 }
 
 func TestSHA512MD(t *testing.T) {
-	var gmd hash.Hash
-	gmd = sha512.New()
+	gmd := sha512.New()
 	doMDTest(t, func() (md *MessageDigest, err error) { return NewMessageDigestWithContext(MESSAGE_DIGEST_SHA512) }, gmd)
 }
 
 func TestRIPEMD160MD(t *testing.T) {
-	var gmd hash.Hash
-	gmd = ripemd160.New()
+	gmd := ripemd160.New()
 	doMDTest(t, func() (md *MessageDigest, err error) { return NewMessageDigestWithContext(MESSAGE_DIGEST_RIPEMD160) }, gmd)
 }
 

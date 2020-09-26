@@ -33,37 +33,31 @@ func NewMessageDigestByType(digest int) (md *MessageDigest) {
 			mdType:   C.MBEDTLS_MD_MD5,
 			mdLength: 16,
 		}
-		break
 	case MESSAGE_DIGEST_SHA1:
 		md = &MessageDigest{
 			ctx:      nil,
 			mdType:   C.MBEDTLS_MD_SHA1,
 			mdLength: 20,
 		}
-		break
 	case MESSAGE_DIGEST_SHA256:
 		md = &MessageDigest{
 			ctx:      nil,
 			mdType:   C.MBEDTLS_MD_SHA256,
 			mdLength: 32,
 		}
-		break
 	case MESSAGE_DIGEST_SHA512:
 		md = &MessageDigest{
 			ctx:      nil,
 			mdType:   C.MBEDTLS_MD_SHA512,
 			mdLength: 64,
 		}
-		break
 	case MESSAGE_DIGEST_RIPEMD160:
 		md = &MessageDigest{
 			ctx:      nil,
 			mdType:   C.MBEDTLS_MD_RIPEMD160,
 			mdLength: 20,
 		}
-		break
 	default:
-		break
 	}
 	if md != nil {
 		md.mdInfo = C.mbedtls_md_info_from_type(md.mdType)

@@ -38,10 +38,10 @@ func TestSHA1(t *testing.T) {
 	}
 }
 
-func BenchmarkSHA1(b *testing.B) {
-	src := []byte("helloworld")
-	b.ResetTimer()
-	for n := 0; n < b.N; n++ {
-		Sha1(src)
-	}
-}
+// func BenchmarkSHA1(b *testing.B) {
+// 	src := []byte("helloworld")
+// 	b.ResetTimer()
+// 	for n := 0; n < b.N; n++ {
+// 		Sha1(src)
+// 	}
+// }

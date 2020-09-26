@@ -38,9 +38,16 @@ func TestMD5(t *testing.T) {
 	}
 }
 
-func BenchmarkMD5(b *testing.B) {
-	src := []byte("helloworld")
-	for n := 0; n < b.N; n++ {
-		MD5(src)
-	}
-}
+// func BenchmarkMbedtlsMD5(b *testing.B) {
+// 	src := []byte("helloworld")
+// 	for n := 0; n < b.N; n++ {
+// 		MD5(src)
+// 	}
+// }
+
+// func BenchmarkCryptoMbedtlsMD5(b *testing.B) {
+// 	src := []byte("helloworld")
+// 	for n := 0; n < b.N; n++ {
+// 		md5.Sum(src)
+// 	}
+// }

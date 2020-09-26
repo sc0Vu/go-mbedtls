@@ -38,10 +38,10 @@ func TestSHA256(t *testing.T) {
 	}
 }
 
-func BenchmarkSHA256(b *testing.B) {
-	src := []byte("helloworld")
-	b.ResetTimer()
-	for n := 0; n < b.N; n++ {
-		Sha256(src)
-	}
-}
+// func BenchmarkSHA256(b *testing.B) {
+// 	src := []byte("helloworld")
+// 	b.ResetTimer()
+// 	for n := 0; n < b.N; n++ {
+// 		Sha256(src)
+// 	}
+// }
